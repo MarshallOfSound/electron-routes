@@ -1,0 +1,19 @@
+{
+  "name": "electron-router",
+  "version": "0.0.0",
+  "main": "src/index.js",
+  "author": "Samuel Attard <samuel.r.attard@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "path-to-regexp": "^1.6.0"
+  },
+  "scripts": {
+    "start": "electron example/main.js"
+  },
+  "devDependencies": {
+    "electron": "^1.4.4",
+    "eslint": "^3.8.1",
+    "eslint-config-airbnb-base": "^9.0.0",
+    "eslint-plugin-import": "^2.0.0"
+  }
+}

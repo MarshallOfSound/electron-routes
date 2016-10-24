@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Test</title>
+  </head>
+  <body>
+    Magic Thing
+    <script>
+    const { remote, webFrame } = require('electron');
+    remote.getGlobal('__router_schemes__').forEach(schemeName => webFrame.registerURLSchemeAsPrivileged(schemeName));
+    </script>
+  </body>
+</html>
