@@ -33,22 +33,26 @@ class MiniRouter {
   }
 
   use(pathMatch, mRouter) {
-    if (mRouter.constructor !== MiniRouter) {
-      throw new Error('Can\'t use non-router');
-    }
-    pathMatch = pathMatch.replace(/^\//g, '');
     const keys = [];
-    this._methods.use.push({
+    pathMatch = pathMatch.replace(/^\//g, '');
+    const use = {
       pathComponent: pathMatch,
       pathRegexp: pathToRegexp(pathMatch, keys, { end: false }),
       pathKeys: keys,
-      router: mRouter,
-    });
+    };
+    if (mRouter.constructor === MiniRouter) {
+      use.router = mRouter;
+    } else if (typeof mRouter === 'function') {
+      use.callback = mRouter;
+    } else {
+      throw new Error('You can only use a router or a function');
+    }
+    this._methods.use.push(use);
   }
 
   processRequest(path, method, handlers) {
     path = path.replace(/^\//g, '');
-    this._methods[method.toLowerCase()].forEach((tHandler) => {
+    const testHandler = (tHandler) => {
       const tPathMatches = tHandler.pathRegexp.exec(path);
       if (tPathMatches) {
         const params = {};
@@ -60,8 +64,10 @@ class MiniRouter {
           fn: tHandler.callback,
         });
       }
-    });
-    this._methods.use.forEach((tHandler) => {
+    };
+    this._methods.use.filter(u => !!u.callback).forEach(testHandler);
+    this._methods[method.toLowerCase()].forEach(testHandler);
+    this._methods.use.filter(u => !!u.router).forEach((tHandler) => {
       const tUseMatches = tHandler.pathRegexp.exec(path);
       if (tUseMatches) {
         const useHandlers = [];
