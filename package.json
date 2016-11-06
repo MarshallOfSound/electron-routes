@@ -1,5 +1,5 @@
 {
-  "name": "electron-router",
+  "name": "@marshallofsound/electron-router",
   "version": "0.0.0",
   "main": "src/index.js",
   "author": "Samuel Attard <samuel.r.attard@gmail.com>",
