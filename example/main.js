@@ -8,7 +8,8 @@ global.router = new global.ElectronRouter.Router();
 global.router.get('foo/:thing/:other', (req, res) => {
   res.json(Object.assign({ foo: 'bar', thing: req.params.thing }, req));
 });
-global.router.post('send/:wut/:yolo', (req, res) => {
+global.router.post('send', (req, res) => {
+  console.log(req.uploadData[0].json());
   res.json(Object.assign({ foo: 'bar', thing: req.params.thing }, req));
 });
 // global.router.get('/', (req, res) => res.json({}));

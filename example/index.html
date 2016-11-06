@@ -7,8 +7,7 @@
   <body>
     Magic Thing
     <script>
-    const { remote, webFrame } = require('electron');
-    remote.getGlobal('__router_schemes__').forEach(schemeName => webFrame.registerURLSchemeAsPrivileged(schemeName));
+    require('../').rendererPreload();
     </script>
   </body>
 </html>

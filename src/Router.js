@@ -21,6 +21,16 @@ class Router extends MiniRouter {
     });
   }
 
+  _nicePost(uploadData) { // eslint-disable-line
+    return uploadData.map((data) => {
+      if (data.bytes && data.bytes.toString) {
+        data.stringContent = () => data.bytes.toString();
+        data.json = () => JSON.parse(data.stringContent());
+      }
+      return data;
+    });
+  }
+
   _handle(request, callback) {
     const { url, referrer, method, uploadData } = request;
     const path = url.substr(this.schemeName.length + 3);
@@ -38,7 +48,7 @@ class Router extends MiniRouter {
           params: tHandler.params,
           method,
           referrer,
-          uploadData: uploadData || [],
+          uploadData: this._nicePost(uploadData) || [],
         };
         const called = fn => (...args) => {
           if (calledBack) throw new Error('Already callled back');
