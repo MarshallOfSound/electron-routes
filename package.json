@@ -2,6 +2,7 @@
   "name": "@marshallofsound/electron-router",
   "version": "1.2.2",
   "main": "src/index.js",
+  "typings": "index.d.ts",
   "author": "Samuel Attard <samuel.r.attard@gmail.com>",
   "license": "MIT",
   "dependencies": {
