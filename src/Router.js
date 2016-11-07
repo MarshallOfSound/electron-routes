@@ -42,14 +42,16 @@ class Router extends MiniRouter {
       });
     } else {
       let calledBack = false;
+      // Move out of scope so it can be mutated
+      const req = {
+        params: {},
+        method,
+        referrer,
+        uploadData: this._nicePost(uploadData) || [],
+      };
       const attemptHandler = (index) => {
         const tHandler = handlers[index];
-        const req = {
-          params: tHandler.params,
-          method,
-          referrer,
-          uploadData: this._nicePost(uploadData) || [],
-        };
+        req.params = tHandler.params;
         const called = fn => (...args) => {
           if (calledBack) throw new Error('Already callled back');
           calledBack = true;
