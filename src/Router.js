@@ -47,7 +47,7 @@ class Router extends MiniRouter {
         params: {},
         method,
         referrer,
-        uploadData: this._nicePost(uploadData) || [],
+        uploadData: this._nicePost(uploadData || []),
       };
       const attemptHandler = (index) => {
         const tHandler = handlers[index];
