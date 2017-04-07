@@ -6,7 +6,8 @@
   "author": "Samuel Attard <samuel.r.attard@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "path-to-regexp": "^1.6.0"
+    "path-to-regexp": "^1.6.0",
+    "stream-buffers": "^3.0.1"
   },
   "scripts": {
     "start": "electron example/main.js"

@@ -1,5 +1,6 @@
 const { app, protocol } = require('electron'); // eslint-disable-line
 const MiniRouter = require('./MiniRouter');
+const { WritableStreamBuffer } = require('stream-buffers');
 
 const schemes = [];
 global.__router_schemes__ = schemes;
@@ -17,7 +18,7 @@ class Router extends MiniRouter {
     schemes.push(schemeName);
     protocol.registerStandardSchemes([schemeName]);
     app.on('ready', () => {
-      protocol.registerStringProtocol(schemeName, this._handle.bind(this));
+      protocol.registerBufferProtocol(schemeName, this._handle.bind(this));
     });
   }
 
@@ -31,7 +32,18 @@ class Router extends MiniRouter {
     });
   }
 
-  _handle(request, callback) {
+  _handle(request, cb) {
+    const callback = (data, mimeType) => {
+      mimeType = mimeType || 'text/html';
+      if (typeof data === 'string') {
+        data = Buffer.from(data);
+      }
+      cb({
+        mimeType,
+        data,
+      });
+    };
+
     const { url, referrer, method, uploadData } = request;
     const path = url.substr(this.schemeName.length + 3);
     const handlers = [];
@@ -48,6 +60,8 @@ class Router extends MiniRouter {
         method,
         referrer,
         uploadData: this._nicePost(uploadData || []),
+        url: request.url,
+        headers: {},
       };
       const attemptHandler = (index) => {
         const tHandler = handlers[index];
@@ -57,11 +71,29 @@ class Router extends MiniRouter {
           calledBack = true;
           fn(...args);
         };
-        const res = {
+
+        const res = new WritableStreamBuffer({ initialSize: 1024 * 1024, incrementAmount: 10 * 1024 });
+        const originalEnd = res.end.bind(res);
+        Object.assign(res, {
           json: called(o => callback(JSON.stringify(o))),
           send: called(s => callback(s)),
           notFound: called(() => callback({ error: -6 })),
-        };
+          end: called((data, ...args) => {
+            originalEnd(data, ...args);
+            if (typeof data === 'string') {
+              callback(data);
+            } else if (data instanceof Buffer) {
+              callback(data);
+            } else if (res.getContentsAsString('utf8').length > 0) {
+              callback(res.getContentsAsString('utf8'));
+            } else {
+              callback('');
+            }
+          }),
+          setHeader: () => undefined,
+          getHeader: () => undefined,
+        });
+
         const next = () => {
           if (calledBack) throw new Error('Can\'t call next once data has already been sent as a response');
           if (index + 1 < handlers.length) {
@@ -74,9 +106,6 @@ class Router extends MiniRouter {
       };
       attemptHandler(0);
     }
-    // console.log(this._methods);
-    // console.log(request);
-    // callback('');
   }
 }
 
