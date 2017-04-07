@@ -1,6 +1,6 @@
 {
   "name": "@marshallofsound/electron-router",
-  "version": "1.2.3",
+  "version": "2.0.0",
   "main": "src/index.js",
   "typings": "index.d.ts",
   "author": "Samuel Attard <samuel.r.attard@gmail.com>",
