@@ -1,4 +1,4 @@
-declare namespace ElectronRouter {
+declare namespace ElectronRoutes {
     interface RouterModule {
         Router: typeof Router;
         MiniRouter: typeof MiniRouter;
@@ -33,6 +33,14 @@ declare namespace ElectronRouter {
          * An array of Electron's uploadData objects. They follow the same structure as found in the Electron docs but with two extra methods.
          */
         uploadData: UploadData[];
+        /**
+         * The URL of the Request
+         */
+        url: string;
+        /**
+         * The headers of the request, currently a permenantly empty object
+         */
+        headers: any;
     }
 
     interface Response {
@@ -43,11 +51,17 @@ declare namespace ElectronRouter {
         /**
          * Will immediately terminate the request sending the string as the response text back to the client.
          */
-        send(content: string): void;
+        send(content: string | Buffer): void;
         /**
          * Will immediately terminate the request with a 404 File Not Found response
          */
         notFound(): void;
+        /**
+         * Immediately sends the response with the given data
+         */
+        end(response: string | Buffer | Buffer[]): void;
+        getHeader(name?: string): undefined;
+        setHeader(name?: string, value?: string): undefined;
     }
 
     class Router extends MiniRouter {
@@ -75,7 +89,7 @@ declare namespace ElectronRouter {
     }
 }
 
-declare module '@marshallofsound/electron-router' {
-    const electronRouter: ElectronRouter.RouterModule;
+declare module 'electron-routes' {
+    const electronRouter: ElectronRoutes.RouterModule;
     export = electronRouter;
 }

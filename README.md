@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/MarshallOfSound/electron-router.svg?branch=master)](https://travis-ci.org/MarshallOfSound/electron-router)
 [![npm version](https://badge.fury.io/js/%40marshallofsound%2Felectron-router.svg)](https://badge.fury.io/js/%40marshallofsound%2Felectron-router)
-[![npm](https://img.shields.io/npm/dm/@marshallofsound/electron-router.svg)](https://www.npmjs.com/package/@marshallofsound/electron-router)
+[![npm](https://img.shields.io/npm/dm/electron-routes.svg)](https://www.npmjs.com/package/electron-routes)
 [![license](https://img.shields.io/github/license/MarshallOfSound/electron-router.svg?maxAge=2592000)](https://github.com/MarshallOfSound/electron-router/blob/master/LICENSE)
 ![status](https://img.shields.io/badge/Status-%20Ready%20for%20Awesome-red.svg)
 
@@ -12,14 +12,14 @@ work inside Electron.
 ## Install
 
 ```
-$ npm install --save @marshallofsound/electron-router
+$ npm install --save electron-routes
 ```
 
 ## Usage
 
 ```js
 // Main Process
-import { Router } from '@marshallofsound/electron-router';
+import { Router } from 'electron-routes';
 
 const api = new Router('myscheme');
 api.get('foo', (req, res) => {
@@ -29,7 +29,7 @@ api.get('foo', (req, res) => {
 });
 
 // Renderer Process
-import { rendererPreload } from '@marshallofsound/electron-router';
+import { rendererPreload } from 'electron-routes';
 
 rendererPreload();
 
