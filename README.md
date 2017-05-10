@@ -125,7 +125,7 @@ javascript object and return it.
 Will immediately terminate the request sending a stringified version of the object
 back to the client.
 
-#### response.send(string)
+#### response.send(string[, mimeType='text/html'])
 
 Will immediately terminate the request sending the string as the response text
 back to the client.

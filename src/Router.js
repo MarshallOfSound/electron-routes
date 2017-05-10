@@ -80,7 +80,7 @@ class Router extends MiniRouter {
         const originalEnd = res.end.bind(res);
         Object.assign(res, {
           json: called(o => callback(JSON.stringify(o))),
-          send: called(s => callback(s)),
+          send: called((s, m) => callback(s, m)),
           notFound: called(() => callback({ error: -6 })),
           end: called((data, ...args) => {
             originalEnd(data, ...args);
