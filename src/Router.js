@@ -1,4 +1,4 @@
-const { app, protocol } = require('electron'); // eslint-disable-line
+const { app, protocol, session } = require('electron'); // eslint-disable-line
 const MiniRouter = require('./MiniRouter');
 const { WritableStreamBuffer } = require('stream-buffers');
 
@@ -6,7 +6,7 @@ const schemes = [];
 global.__router_schemes__ = schemes;
 
 class Router extends MiniRouter {
-  constructor(schemeName = 'app') {
+  constructor(schemeName = 'app', partitionKey) {
     if (app.isReady()) {
       throw new Error('Router must be initialized before the app is ready');
     }
@@ -18,7 +18,11 @@ class Router extends MiniRouter {
     schemes.push(schemeName);
     protocol.registerStandardSchemes([schemeName]);
     app.on('ready', () => {
-      protocol.registerBufferProtocol(schemeName, this._handle.bind(this));
+      let mProtocol = protocol;
+      if (partitionKey) {
+        mProtocol = session.fromPartition(partitionKey).protocol;
+      }
+      mProtocol.registerBufferProtocol(schemeName, this._handle.bind(this));
     });
   }
 

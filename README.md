@@ -40,7 +40,7 @@ fetch('myscheme://foo')
 
 ## API
 
-### Router([schemeName = 'app'])
+### Router([schemeName = 'app', partitionName])
 
 #### router.\[method\](pathPattern, handler)
 
